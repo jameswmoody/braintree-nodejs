@@ -1,7 +1,17 @@
+{{#if errors}}
+  <div class="errors">
+    <ul>
+      {{#each errors}}
+        <li>{{this.message}}</li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}
+
 <section class="form-wrapper">
-  <!-- <form id="form" method="post" action="/checkout"> -->
+  <form id="form" method="post" action="/checkout">
     <h3>Drop-In v3 Transaction <span class="tagline">(want <a href="hosted_fields/index.php">Hosted Fields?</a>)<span></h3>
-    <!-- <div class="dropin-customer-data">
+    <div class="dropin-customer-data">
       <div class="row">
         <div class="col-xs-3 field-box">
           <label for="amount">Amount</label>
@@ -13,18 +23,18 @@
         </div>
         <div class="col-xs-3 field-box">
           <label for="first">First</label>
-          <input class="dropin-form-field" type="text" name="first-name">
+          <input class="dropin-form-field" type="text" name="firstName">
         </div>
         <div class="col-xs-3 field-box">
           <label for="last">Last</label>
-          <input class="dropin-form-field" type="text" name="last-name">
+          <input class="dropin-form-field" type="text" name="lastName">
         </div>
       </div>
 
       <div class="row">
         <div class="col-xs-4 field-box">
           <label for="streetAddress">Street Address</label>
-          <input class="dropin-form-field" type="text" name="street-address">
+          <input class="dropin-form-field" type="text" name="streetAddress">
         </div>
         <div class="col-xs-4 field-box">
           <label for="city">City</label>
@@ -35,11 +45,12 @@
           <input class="dropin-form-field" type="text" name="state">
         </div>
       </div>
-    </div> -->
+    </div>
 
+    <div id="checkout-message"></div>
     <div id="dropin-container"></div>
 
-    <!-- <div class="options">
+    <div class="options">
       <div class="row">
         <label class="options-label" for="country">Country:</label>
         <select id="country" name="country">
@@ -49,19 +60,22 @@
           <option value="AU">AU</option>
           <option value="JP">JP</option>
         </select>
-        <label class="options-label" for="submit-for-settlement">Submit for Settlement: <input id="submit-for-settlement" name="submit-for-settlement" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50"></label>
+        <label class="options-label" for="submitForSettlement">Submit for Settlement: <input id="submitForSettlement" name="submitForSettlement" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50"></label>
         <label class="options-label" for="vault">Store in Vault on Success: <input id="vault" name="vault" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50"></label>
       </div>
       <div class="row">
-        <label class="options-label" for="skip-atf">Skip Advanced Fraud Tools: <input id="skip-atf" name="skip-atf" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50"></label>
-        <label class="options-label" for="skip-avs">Skip AVS Rules: <input id="skip-avs" name="skip-avs" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50"></label>
-        <label class="options-label" for="skip-cvv">Skip CVV Rules: <input id="skip-cvv" name="skip-cvv" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50"></label>
+        <label class="options-label" for="skipAtf">Skip Advanced Fraud Tools:</label>
+        <input id="skip-atf" name="skipAtf" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50">
+        <label class="options-label" for="skipAvs">Skip AVS Rules:</label>
+        <input id="skip-avs" name="skipAvs" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50">
+        <label class="options-label" for="skipCvv">Skip CVV Rules:</label>
+        <input id="skip-cvv" name="skipCvv" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50">
       </div>
-    </div> -->
+    </div>
 
-    <!-- <input type="hidden" name="nonce"> -->
+    <input id='nonce' type="hidden" name="nonce">
     <input class="btn btn-success" id="submit-button" type="submit" value="Checkout">
-  <!-- </form> -->
+  </form>
 </section>
 
 <script>
@@ -72,33 +86,9 @@
     container: '#dropin-container'
   }, function (createErr, instance) {
     button.addEventListener('click', function(event) {
-
       instance.requestPaymentMethod(function(requestPaymentMethodErr, payload) {
-        console.log(payload.nonce);
-
-        $.ajax({
-          type: 'POST',
-          url: '/checkout',
-          data: {'paymentMethodNonce': payload.nonce}
-        }).done(function(result) {
-          // Tear down the Drop-in UI
-          instance.teardown(function (teardownErr) {
-            if (teardownErr) {
-              console.error('Could not tear down Drop-in UI!');
-            } else {
-              console.info('Drop-in UI has been torn down!');
-              // Remove the submit payment method button
-              $('#submit-button').remove();
-            }
-          });
-
-          if (result.success) {
-            $('#checkout-message').html('<h1>Success</h1><p>Your Drop-in UI is working! Check your <a href="https://sandbox.braintreegateway.com/login">sandbox Control Panel</a> for your test transactions.</p><p>Refresh to try another transaction.</p>');
-          } else {
-            console.log(result);
-            $('#checkout-message').html('<h1>Error</h1><p>Check your console.</p>');
-          }
-        });
+        document.querySelector('#nonce').value = payload.nonce;
+        form.submit();
       });
     });
   });

@@ -294,3 +294,18 @@ i {
 pre {
   background-color: #ffffff;
 }
+
+
+/* Errors */
+
+.errors {
+  background-color: #F2DEDE;
+  color: #A94442;
+  border: 1px solid #EBCCD1;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.errors ul {
+  margin-bottom: 0;
+}
