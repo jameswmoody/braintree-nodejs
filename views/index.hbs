@@ -1,2 +1,102 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<section class="form-wrapper">
+  <form id="form" method="post" action="checkout.php">
+    <h3>Drop-In v3 Transaction <span class="tagline">(want <a href="hosted_fields/index.php">Hosted Fields?</a>)<span></h3>
+    <div class="dropin-customer-data">
+      <div class="row">
+        <div class="col-xs-3 field-box">
+          <label for="amount">Amount</label>
+          <input class="dropin-form-field" type="text" name="amount">
+        </div>
+        <div class="col-xs-3 field-box">
+          <label for="email">Email</label>
+          <input class="dropin-form-field" type="text" name="email">
+        </div>
+        <div class="col-xs-3 field-box">
+          <label for="first">First</label>
+          <input class="dropin-form-field" type="text" name="first-name">
+        </div>
+        <div class="col-xs-3 field-box">
+          <label for="last">Last</label>
+          <input class="dropin-form-field" type="text" name="last-name">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-4 field-box">
+          <label for="streetAddress">Street Address</label>
+          <input class="dropin-form-field" type="text" name="street-address">
+        </div>
+        <div class="col-xs-4 field-box">
+          <label for="city">City</label>
+          <input class="dropin-form-field" type="text" name="city">
+        </div>
+        <div class="col-xs-4 field-box">
+          <label for="state">State</label>
+          <input class="dropin-form-field" type="text" name="state">
+        </div>
+      </div>
+    </div>
+
+    <div id="dropin-container"></div>
+
+    <div class="options">
+      <div class="row">
+        <label class="options-label" for="country">Country:</label>
+        <select id="country" name="country">
+          <option value="US">US</option>
+          <option value="GB">UK</option>
+          <option value="FR">FR</option>
+          <option value="AU">AU</option>
+          <option value="JP">JP</option>
+        </select>
+        <label class="options-label" for="submit-for-settlement">Submit for Settlement: <input id="submit-for-settlement" name="submit-for-settlement" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50"></label>
+        <label class="options-label" for="vault">Store in Vault on Success: <input id="vault" name="vault" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50"></label>
+      </div>
+      <div class="row">
+        <label class="options-label" for="skip-atf">Skip Advanced Fraud Tools: <input id="skip-atf" name="skip-atf" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50"></label>
+        <label class="options-label" for="skip-avs">Skip AVS Rules: <input id="skip-avs" name="skip-avs" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50"></label>
+        <label class="options-label" for="skip-cvv">Skip CVV Rules: <input id="skip-cvv" name="skip-cvv" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50"></label>
+      </div>
+    </div>
+
+    <input type="hidden" name="nonce">
+    <input class="btn btn-success" id="submit-button" type="submit" value="Checkout">
+  </form>
+</section>
+
+<script>
+  var button = document.querySelector('#submit-button');
+
+  braintree.dropin.create({
+    authorization: 'sandbox_9hftqy6p_8wvh7xt26f73z4yg',
+    container: '#dropin-container'
+  }, function (createErr, instance) {
+    button.addEventListener('click', function () {
+      instance.requestPaymentMethod(function (requestPaymentMethodErr, payload) {
+        $.ajax({
+          type: 'POST',
+          url: '/checkout',
+          data: {'paymentMethodNonce': payload.nonce}
+        }).done(function(result) {
+          // Tear down the Drop-in UI
+          instance.teardown(function (teardownErr) {
+            if (teardownErr) {
+              console.error('Could not tear down Drop-in UI!');
+            } else {
+              console.info('Drop-in UI has been torn down!');
+              // Remove the submit payment method button
+              $('#submit-button').remove();
+            }
+          });
+
+          if (result.success) {
+            $('#checkout-message').html('<h1>Success</h1><p>Your Drop-in UI is working! Check your <a href="https://sandbox.braintreegateway.com/login">sandbox Control Panel</a> for your test transactions.</p><p>Refresh to try another transaction.</p>');
+          } else {
+            console.log(result);
+            $('#checkout-message').html('<h1>Error</h1><p>Check your console.</p>');
+          }
+        });
+      });
+    });
+  });
+</script>
