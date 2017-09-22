@@ -1,0 +1,28 @@
+{{#if message}}
+  <div class="success">
+    <p>{{ message }}</p>
+  </div>
+{{/if}}
+
+{{#if errors}}
+  <div class="errors">
+    <ul>
+      {{#each errors}}
+        <li>{{this.message}}</li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}
+
+<section class="form-wrapper">
+	<form id="form" method="post" action="/void">
+    <h3>Void</h3>
+      <div class="row">
+        <div class="col-xs-12 field-box">
+          <input class="form-field" type="text" name="transactionId" placeholder="Transaction ID">
+        </div>
+      </div>
+    <br>
+	  <input class="btn btn-danger" id="submit-button" type="submit" value="Void">
+  </form>
+</section>
