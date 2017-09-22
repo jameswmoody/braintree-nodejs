@@ -55,10 +55,9 @@ router.post('/', function(req, res, next) {
         title: 'Braintree Node.js Integration'
       });
     } else {
-      transactionErrors = result.errors.deepErrors();
       console.log(transactionErrors);
       res.render('index', {
-        errors: transactionErrors,
+        errors: result.errors.deepErrors(),
         title: 'Braintree Node.js Integration'
       });
     }

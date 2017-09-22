@@ -296,7 +296,7 @@ pre {
 }
 
 
-/* Errors */
+/* Alerts */
 
 .errors {
   background-color: #F2DEDE;
@@ -306,6 +306,14 @@ pre {
   padding: 10px;
 }
 
-.errors ul {
+.success {
+  background-color: #DFF0D8;
+  color: #3C763D;
+  border: 1px solid #D6E9C6;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.errors ul, .success p {
   margin-bottom: 0;
 }
