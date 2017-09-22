@@ -1,16 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const braintree = require('braintree');
-const dotenv = require('dotenv').config();
+const gateway = require('../lib/gateway');
 
 router.post('/', function(req, res, next) {
-  const gateway = braintree.connect({
-    environment: braintree.Environment.Sandbox,
-    merchantId: process.env.BT_MERCHANT_ID,
-    publicKey: process.env.BT_PUBLIC_KEY,
-    privateKey: process.env.BT_PRIVATE_KEY
-  });
-
   // Payment Variables
   const nonce = req.body.nonce;
   const amount = req.body.amount;
@@ -65,7 +58,7 @@ router.post('/', function(req, res, next) {
       transactionErrors = result.errors.deepErrors();
       console.log(transactionErrors);
       res.render('index', {
-        errors: transactionErrors, 
+        errors: transactionErrors,
         title: 'Braintree Node.js Integration'
       });
     }
