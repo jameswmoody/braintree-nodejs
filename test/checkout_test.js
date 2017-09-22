@@ -69,9 +69,8 @@ describe('Transaction create', function () {
         api.post('/checkout')
           .send({amount: 'not_a_valid_amount', payment_method_nonce: 'not_a_valid_nonce'})
           .end(function (err, res) {
-            var req = api.get('/');
-              expect(res.text).to.contain('Amount is an invalid format.');
-              done();
+            expect(res.text).to.contain('Amount is an invalid format.');
+            done();
           });
       });
     });
