@@ -1,0 +1,8 @@
+<h1>Transaction {{ transaction.id }}</h1>
+<p>Amount: ${{ transaction.amount }}</p>
+<p>Name: {{ transaction.customer.firstName }} {{ transaction.customer.lastName }}</p>
+<p>Email: {{ transaction.customer.email }}</p>
+<p>Status: {{ transaction.status }}</p>
+
+<h2>Result Object:</h2>
+<pre>{{ result }}</pre>

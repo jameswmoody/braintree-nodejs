@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var braintree = require('braintree');
+const express = require('express');
+const router = express.Router();
+const braintree = require('braintree');
 
 /* GET home page. */
 router.get('/', function(req, res) {

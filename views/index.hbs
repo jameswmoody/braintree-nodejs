@@ -79,13 +79,17 @@
 </section>
 
 <script>
-  var button = document.querySelector('#submit-button');
+  const submitButton = document.querySelector('#submit-button');
+  const form = document.querySelector('#form');
 
   braintree.dropin.create({
     authorization: 'sandbox_pts9dwpx_ypqzd3sxwcnqymbw',
     container: '#dropin-container'
   }, function (createErr, instance) {
-    button.addEventListener('click', function(event) {
+    submitButton.addEventListener('click', function(event) {
+      console.log('click');
+      event.preventDefault();
+
       instance.requestPaymentMethod(function(requestPaymentMethodErr, payload) {
         document.querySelector('#nonce').value = payload.nonce;
         form.submit();
