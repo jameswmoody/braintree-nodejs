@@ -10,10 +10,9 @@ router.get('/', function(req, res) {
 
 /* POST void form */
 router.post('/', function(req, res) {
-  console.log('post');
   const transactionId = req.body.transactionId;
 
-  const result = gateway.transaction.void(transactionId, function (err, result) {
+  gateway.transaction.void(transactionId, function (err, result) {
     console.log(result);
     if (result.success) {
       res.render('void', {
