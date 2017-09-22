@@ -9,7 +9,7 @@
 {{/if}}
 
 <section class="form-wrapper">
-  <form id="form" method="post" action="/checkout">
+  <form id="checkout-form" method="post" action="/checkout">
     <h3>Drop-In v3 Transaction <span class="tagline">(want <a href="hosted_fields/index.php">Hosted Fields?</a>)<span></h3>
     <div class="dropin-customer-data">
       <div class="row">
@@ -80,7 +80,7 @@
 
 <script>
   const submitButton = document.querySelector('#submit-button');
-  const form = document.querySelector('#form');
+  const form = document.querySelector('#checkout-form');
 
   braintree.dropin.create({
     authorization: 'sandbox_pts9dwpx_ypqzd3sxwcnqymbw',
