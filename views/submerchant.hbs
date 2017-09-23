@@ -1,0 +1,75 @@
+{{#if message}}
+  <div class="success">
+    <p>{{ message }}</p>
+  </div>
+{{/if}}
+
+{{#if errors}}
+  <div class="errors">
+    <ul>
+      {{#each errors}}
+        <li>{{this.message}}</li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}
+
+<section class="form-wrapper">
+  <form id="submerchant-form" action="/submerchant" method="post">
+    <h3>Create a Sub-merchant</h3>
+    <div class="row">
+      <div class="col-xs-4 field-box">
+        <input class="form-field" type="text" name="firstName" placeholder="First">
+      </div>
+      <div class="col-xs-4 field-box">
+        <input class="form-field" type="text" name="lastName" placeholder="Last">
+      </div>
+      <div class="col-xs-4 field-box">
+        <input class="form-field" type="text" name="dateOfBirth" placeholder="DOB YYYY-MM-DD">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-6 field-box">
+        <input class="form-field" type="text" name="email" placeholder="Email">
+      </div>
+      <div class="col-xs-6 field-box">
+        <input class="form-field" type="text" name="phone" placeholder="Phone">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-3 field-box">
+        <input class="form-field" type="text" name="city" placeholder="City">
+      </div>
+      <div class="col-xs-3 field-box">
+        <input class="form-field" type="text" name="state" placeholder="State/Province">
+      </div>
+      <div class="col-xs-3 field-box">
+        <input class="form-field" type="text" name="streetAddress" placeholder="Street Address">
+      </div>
+      <div class="col-xs-3 field-box">
+        <input class="form-field" type="text" name="postalCode" placeholder="Postal Code">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-4 field-box">
+        <input class="form-field" type="text" name="businesName" placeholder="Business Name">
+      </div>
+      <div class="col-xs-4 field-box">
+        <input class="form-field" type="text" name="accountNumber" placeholder="Bank Account Number">
+      </div>
+      <div class="col-xs-4 field-box">
+        <input class="form-field" type="text" name="routingNumber" placeholder="Routing Number">
+      </div>
+    </div>
+
+    <div class="options hf-options">
+      <div class="row">
+        <label class="options-label" for="tosAccepted">Do you accept the Terms of Service? <input id="tos-accepted" name="tosAccepted" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50"></label>
+      </div>
+    </div>
+    <input class="btn btn-primary" id="submit-button" type="submit" value="Submit" />
+  </form>
+</section>

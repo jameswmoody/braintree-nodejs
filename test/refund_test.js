@@ -36,7 +36,7 @@ describe('Refund page', function () {
 });
 
 describe('Refund transaction', function() {
-  it.skip('refunds transaction and renders void page', function() {
+  it.skip('refunds transaction and renders refund page', function() {
     gateway.transaction.sale({
       amount: '10.00',
       paymentMethodNonce: 'fake-valid-nonce',
@@ -50,7 +50,7 @@ describe('Refund transaction', function() {
       .send({transactionId: transaction.id})
       .end(function (err, res) {
         expect(200, done)
-        .expect(res.text).to.contain('Void was successful!');
+        .expect(res.text).to.contain('Refund was successful!');
         done();
       });
     });
