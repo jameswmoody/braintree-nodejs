@@ -12,6 +12,7 @@ const checkout = require('./routes/checkout');
 const refund = require('./routes/refund');
 const voidTxn = require('./routes/void');
 const submerchant = require('./routes/submerchant');
+const marketplace = require('./routes/marketplace');
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use('/checkout', checkout);
 app.use('/refund', refund);
 app.use('/void', voidTxn);
 app.use('/submerchant', submerchant);
+app.use('/marketplace', marketplace);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

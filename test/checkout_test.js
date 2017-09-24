@@ -56,12 +56,8 @@ describe('Transaction create', function () {
         api.post('/checkout')
           .send({amount: 'not_a_valid_amount', payment_method_nonce: 'not_a_valid_nonce'})
           .end(function (err, res) {
-            var req = api.get('/');
-
-            req.end(function (err, res) {
-              expect(res.text).to.contain('Drop-In v3 Transaction');
-              done();
-            });
+            expect(res.text).to.contain('Drop-In v3 Transaction');
+            done();
           });
       });
 
