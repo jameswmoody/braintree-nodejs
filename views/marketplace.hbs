@@ -1,0 +1,173 @@
+{{#if errors}}
+  <div class="errors">
+    <ul>
+      {{#each errors}}
+        <li>{{this.message}}</li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}
+
+<section class="form-wrapper">
+  <form id="marketplace-form" action="/marketplace" method="post">
+    <h3>Marketplace Transaction</h3>
+    <div class="row">
+      <div class="col-xs-6 field-box">
+        <input class="form-field" type="text" name="firstName" placeholder="First">
+      </div>
+      <div class="col-xs-6 field-box">
+        <input class="form-field" type="text" name="lastName" placeholder="Last">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-3 field-box">
+        <input class="form-field" type="text" name="city" placeholder="City">
+      </div>
+      <div class="col-xs-3 field-box">
+        <input class="form-field" type="text" name="state" placeholder="State/Province">
+      </div>
+      <div class="col-xs-3 field-box">
+        <input class="form-field" type="text" name="streetAddress" placeholder="Street Address">
+      </div>
+      <div class="col-xs-3 field-box">
+        <div id="postalCode" class="hosted-field"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-4 field-box">
+        <input class="form-field" type="text" name="email" placeholder="Email">
+      </div>
+      <div class="col-xs-4 field-box">
+        <input class="form-field" type="text" name="amount" placeholder="Amount">
+      </div>
+      <div class="col-xs-4 field-box">
+        <input class="form-field" type="text" name="serviceFee" placeholder="Service Fee">
+      </div>
+    </div>
+
+    <div class="cardinfo-wrapper row">
+      <div class="cardinfo-number col-xs-4 field-box">
+        <div id="card-number" class="hosted-field"></div>
+      </div>
+      <div class="cardinfo-cvv col-xs-4 field-box">
+        <div id="cvv" class="hosted-field"></div>
+      </div>
+      <div class="cardinfo-exp-date col-xs-4 field-box">
+        <div id="expiration-date" class="hosted-field"></div>
+      </div>
+    </div>
+
+    <div class="options hf-options">
+			<div class="row">
+				<label class="options-label" for="country">Sub-merchant:
+          <select id="merchantAccountId" name="merchantAccountId">
+            <option value="Marvin_Gaye_instant">Trouble Man Inc</option>
+            <option value="Isaac_Hayes_instant">Soulsville USA</option>
+            <option value="John_Doe_instant">Doe &amp; Doe, LLC</option>
+            <option value="jameswmoodycom">Master Merchant</option>
+          </select>
+        </label>
+				<label class="options-label" for="submitForSettlement">Submit for Settlement:</label>
+        <input id="submit-for-settlement" name="submitForSettlement" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50">
+				<label class="options-label" for="vault">Store in Vault on Success:</label>
+        <input id="vault" name="vault" type="checkbox" value="true" checked data-toggle="toggle" data-size="mini" data-width="50">
+			</div>
+			<div class="row">
+				<label class="options-label" for="skipAtf">Skip Advanced Fraud Tools:</label>
+        <input id="skip-atf" name="skipAtf" type="checkbox" value="true" data-toggle="toggle" data-size="mini" data-width="50">
+				<label class="options-label" for="skipAvs">Skip AVS Rules:</label>
+        <input id="skip-avs" name="skipAvs" type="checkbox" value="true" data-toggle="toggle" data-size="mini" data-width="50">
+				<label class="options-label" for="skipCvv">Skip CVV Rules:</label>
+        <input id="skip-cvv" name="skipCvv" type="checkbox" value="true" data-toggle="toggle" data-size="mini" data-width="50">
+			</div>
+		</div>
+
+    <input type="hidden" name="nonce">
+    <input type="hidden" name="device-data">
+    <input class="btn btn-success" id="submit-button" type="submit" value="Checkout" />
+  </form>
+</section>
+
+<script src="https://js.braintreegateway.com/web/3.22.2/js/client.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.22.2/js/hosted-fields.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.22.2/js/data-collector.min.js"></script>
+<script>
+  const form = document.querySelector('#marketplace-form');
+  const submit = document.querySelector('input[type="submit"]');
+  const token = '{{clientToken}}';
+
+  braintree.client.create({
+    authorization: 'sandbox_pts9dwpx_ypqzd3sxwcnqymbw'
+  }, function (clientErr, clientInstance) {
+    if (clientErr) {
+      console.error(clientErr);
+      return;
+    }
+    braintree.dataCollector.create({
+      client: clientInstance,
+      kount: true
+    }, function (err, dataCollectorInstance) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      form.querySelector('input[name="device-data"]').value = dataCollectorInstance.deviceData;
+    });
+    braintree.hostedFields.create({
+      client: clientInstance,
+      styles: {
+        'input': {
+          'font-size': '14px',
+          'color': '#3A3A3A',
+          'font-family': 'Courier New, Courier, monospace'
+        },
+        'input.invalid': {
+          'color': 'red'
+        },
+        'input.valid': {
+          'color': 'green'
+        },
+        '.valid': {
+          'color': 'green'
+        }
+      },
+      fields: {
+        number: {
+          selector: '#cardNumber',
+          placeholder: '•••• •••• •••• ••••'
+        },
+        cvv: {
+          selector: '#cvv',
+          placeholder: 'CVV'
+        },
+        expirationDate: {
+          selector: '#expirationDate',
+          placeholder: 'MM/YYYY'
+        },
+        postalCode: {
+          selector: '#postalCode',
+          placeholder: '11111'
+        }
+      }
+    }, function (hostedFieldsErr, hostedFieldsInstance) {
+      if (hostedFieldsErr) {
+        console.error(hostedFieldsErr);
+        return;
+      }
+      submit.removeAttribute('disabled');
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
+          if (tokenizeErr) {
+            console.error(tokenizeErr);
+            return;
+          }
+          form.querySelector('input[name="nonce"]').value = payload.nonce;
+          form.submit();
+        });
+      }, false);
+    });
+  });
+</script>

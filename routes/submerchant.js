@@ -9,8 +9,6 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  console.log('post');
-
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const dateOfBirth = req.body.dateOfBirth;
